@@ -1,0 +1,89 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "title": "Gemeindeverwaltung",
+          "description": "description"
+        },
+        "geometry": {
+          "coordinates": [
+            7.619789947112679,
+            46.878938007978064
+          ],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "title": "BAhnhof XY",
+          "description": "description"
+        },
+        "geometry": {
+          "coordinates": [
+            7.62136250092783,
+            46.88084009748843
+          ],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "title": "asdf",
+          "description": "asdfasd"
+        },
+        "geometry": {
+          "coordinates": [
+            7.622256667047907,
+            46.88261894582024
+          ],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "title": "asdf",
+          "description": "asdf"
+        },
+        "geometry": {
+          "coordinates": [
+            7.6242702938222635,
+            46.88115704635712
+          ],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "title": "dfasdf",
+          "description": "asdf"
+        },
+        "geometry": {
+          "coordinates": [
+            7.62412007265209,
+            46.87943747068991
+          ],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "description": "asdf",
+          "title": "asdf"
+        },
+        "geometry": {
+          "coordinates": [
+            7.624382262953731,
+            46.87796095931458
+          ],
+          "type": "Point"
+        }
+      }
+    ]
+  }

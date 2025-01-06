@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Screen Map and Table</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+
+    <style>
+        /* Ensure the layout adapts to the screen ratio */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #container {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        @media (min-aspect-ratio: 1/1) {
+            #container {
+                flex-direction: row;
+            }
+        }
+
+        #map {
+            flex: 1;
+            height: 100%;
+        }
+
+        #table-container {
+            flex: 1;
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="map"></div>
+        <div id="table-container">
+            <table id="marker-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+    <script>
+        // Initialize the map
+        var map = L.map('map', {zoom: 11});
+
+        // Add OpenStreetMap tiles to the map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19,
+        }).addTo(map);
+
+        // Load GeoJSON data from a URL
+        var geojsonUrl = '/markers.geojson'; // Replace with your GeoJSON URL
+
+        fetch(geojsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                var markerMap = new Map();
+                var tableBody = document.querySelector('#marker-table tbody');
+
+                // Create a GeoJSON layer
+                var geojsonLayer = L.geoJSON(data, {
+                    onEachFeature: function (feature, layer) {
+                        if (feature.properties && feature.properties.description) {
+                            var title = feature.properties.title;
+                            var description = feature.properties.description;
+
+                            layer.bindPopup('<b>' + title + '</b><br>' + description);
+
+                            // Add marker to the map with reference
+                            markerMap.set(title, layer);
+
+                            // Add row to the table
+                            var row = document.createElement('tr');
+                            row.innerHTML = `<td>${title}</td><td>${description}</td>`;
+                            row.addEventListener('click', () => {
+                                map.flyTo(layer.getLatLng(), 17);
+                                //layer.openPopup();
+                            });
+                            tableBody.appendChild(row);
+
+                            // Navigate to the marker when clicked
+                            layer.on('click', () => {
+                                var rows = tableBody.querySelectorAll('tr');
+                                rows.forEach(r => r.classList.remove('highlight'));
+                                row.classList.add('highlight');
+                            });
+                        }
+                    }
+                });
+
+                // Add the GeoJSON layer to the map
+                geojsonLayer.addTo(map);
+
+                // Adjust the map's view to fit the GeoJSON layer
+                map.fitBounds(geojsonLayer.getBounds());
+            })
+            .catch(error => console.error('Error loading GeoJSON:', error));
+
+        // CSS for highlighted row
+        var style = document.createElement('style');
+        style.textContent = `.highlight { background-color: #ffdd57; }`;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
